@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин аккаунтов - Mini App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .logo {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            opacity: 0.8;
+            font-size: 14px;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-btn.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+        }
+        
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .card-price {
+            background: #4CAF50;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .card-desc {
+            opacity: 0.8;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+        
+        .buy-btn {
+            background: linear-gradient(135deg, #00C853 0%, #64DD17 100%);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .buy-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 200, 83, 0.3);
+        }
+        
+        .profile-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .profile-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .profile-item:last-child {
+            border-bottom: none;
+        }
+        
+        .profile-label {
+            opacity: 0.8;
+        }
+        
+        .profile-value {
+            font-weight: 600;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .order-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .order-status {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .status-pending {
+            background: #FF9800;
+        }
+        
+        .status-confirmed {
+            background: #4CAF50;
+        }
+        
+        .status-rejected {
+            background: #F44336;
+        }
+        
+        .payment-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .payment-reqs {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: monospace;
+        }
+        
+        .support-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .support-link {
+            display: inline-block;
+            background: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        .support-link:hover {
+            background: #1976D2;
+            transform: scale(1.05);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            animation: slideIn 0.3s;
+            z-index: 1000;
+        }
+        
+        .loader {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .nav-btn {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🛍️ Аккаунты</div>
+            <div class="subtitle">Покупка аккаунтов в Telegram</div>
+        </div>
+        
+        <div class="nav">
+            <button class="nav-btn active" data-section="shop" onclick="showSection('shop')">
+                <span class="nav-icon">🛒</span>
+                <span>Магазин</span>
+            </button>
+            <button class="nav-btn" data-section="profile" onclick="showSection('profile')">
+                <span class="nav-icon">👤</span>
+                <span>Профиль</span>
+            </button>
+            <button class="nav-btn" data-section="support" onclick="showSection('support')">
+                <span class="nav-icon">🆘</span>
+                <span>Поддержка</span>
+            </button>
+        </div>
+        
+        <!-- Магазин -->
+        <div id="shop" class="section active">
+            <div class="card" onclick="showProducts('premium')">
+                <div class="card-header">
+                    <div class="card-title">🎫 Аккаунт с премиум</div>
+                    <div class="card-price">39.99₽</div>
+                </div>
+                <div class="card-desc">Премиум доступ на 1 месяц. Автопродление.</div>
+                <div class="card-footer">
+                    <div class="card-badge">🔥 Популярное</div>
+                    <button class="buy-btn">Выбрать</button>
+                </div>
+            </div>
+            
+            <div class="card" onclick="showProducts('fiz')">
+                <div class="card-header">
+                    <div class="card-title">🌍 ФИЗ аккаунты</div>
+                    <div class="card-price">от 15₽</div>
+                </div>
+                <div class="card-desc">Аккаунты разных стран для различных нужд</div>
+                <div class="card-footer">
+                    <div class="card-badge">4 страны</div>
+                    <button class="buy-btn">Выбрать</button>
+                </div>
+            </div>
+            
+            <div class="card" onclick="showProducts('otleg')">
+                <div class="card-header">
+                    <div class="card-title">🎭 Аккаунты с отлегой</div>
+                    <div class="card-price">Спец. цена</div>
+                </div>
+                <div class="card-desc">Уникальные аккаунты с дополнительными возможностями</div>
+                <div class="card-footer">
+                    <div class="card-badge">Эксклюзив</div>
+                    <button class="buy-btn">Выбрать</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Премиум аккаунты -->
+        <div id="premium-products" class="section">
+            <button class="buy-btn" onclick="showSection('shop')" style="margin-bottom: 20px;">◀️ Назад</button>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🎫 Премиум аккаунт</div>
+                    <div class="card-price">39.99₽</div>
+                </div>
+                <div class="card-desc">
+                    • Премиум доступ на 1 месяц<br>
+                    • Автопродление<br>
+                    • Все функции разблокированы<br>
+                    • Приоритетная поддержка
+                </div>
+                <div class="card-footer">
+                    <div class="card-badge">⭐ Лучший выбор</div>
+                    <button class="buy-btn" onclick="buyProduct('premium', 'Премиум аккаунт', 39.99)">Купить</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ФИЗ аккаунты -->
+        <div id="fiz-products" class="section">
+            <button class="buy-btn" onclick="showSection('shop')" style="margin-bottom: 20px;">◀️ Назад</button>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🇺🇸 ФИЗ США</div>
+                    <div class="card-price">30₽</div>
+                </div>
+                <div class="card-desc">Аккаунт с привязкой к США. Для международных сервисов.</div>
+                <button class="buy-btn" onclick="buyProduct('fiz_usa', 'ФИЗ США', 30)" style="width: 100%; margin-top: 10px;">Купить</button>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🇮🇳 ФИЗ Индия</div>
+                    <div class="card-price">15₽</div>
+                </div>
+                <div class="card-desc">Аккаунт с привязкой к Индии. Для дешевых подписок.</div>
+                <button class="buy-btn" onclick="buyProduct('fiz_india', 'ФИЗ Индия', 15)" style="width: 100%; margin-top: 10px;">Купить</button>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🇷🇺 ФИЗ Россия</div>
+                    <div class="card-price">199₽</div>
+                </div>
+                <div class="card-desc">Аккаунт с привязкой к России. Для локальных сервисов.</div>
+                <button class="buy-btn" onclick="buyProduct('fiz_russia', 'ФИЗ Россия', 199)" style="width: 100%; margin-top: 10px;">Купить</button>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🇰🇿 ФИЗ Казахстан</div>
+                    <div class="card-price">199₽</div>
+                </div>
+                <div class="card-desc">Аккаунт с привязкой к Казахстану. Для региональных сервисов.</div>
+                <button class="buy-btn" onclick="buyProduct('fiz_kazakhstan', 'ФИЗ Казахстан', 199)" style="width: 100%; margin-top: 10px;">Купить</button>
+            </div>
+        </div>
+        
+        <!-- Профиль -->
+        <div id="profile" class="section">
+            <div class="profile-info">
+                <div class="profile-item">
+                    <div class="profile-label">👤 Username:</div>
+                    <div class="profile-value" id="profile-username">@user123</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-label">🆔 ID:</div>
+                    <div class="profile-value" id="profile-id">123456789</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-label">💰 Баланс:</div>
+                    <div class="profile-value" id="profile-balance">0₽</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-label">🛒 Покупок:</div>
+                    <div class="profile-value" id="profile-purchases">0</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-label">💸 Потрачено:</div>
+                    <div class="profile-value" id="profile-spent">0₽</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-label">📅 Регистрация:</div>
+                    <div class="profile-value" id="profile-registration">01.01.2024</div>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="stats-total">0</div>
+                    <div class="stat-label">Всего покупок</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stats-active">0</div>
+                    <div class="stat-label">Активные</div>
+                </div>
+            </div>
+            
+            <h3 style="margin: 20px 0 10px 0;">📋 История заказов</h3>
+            <div id="orders-list">
+                <div class="order-card">
+                    Загрузка истории...
+                </div>
+            </div>
+        </div>
+        
+        <!-- Поддержка -->
+        <div id="support" class="section">
+            <div class="support-card">
+                <h3 style="margin-bottom: 15px;">🆘 Техническая поддержка</h3>
+                <p>По всем вопросам обращайтесь к нашему специалисту:</p>
+                <a href="https://t.me/starfizovoi" class="support-link" target="_blank">
+                    @starfizovoi
+                </a>
+                <p style="margin-top: 20px; font-size: 14px; opacity: 0.8;">
+                    ⏰ Работаем 24/7<br>
+                    ⚡ Среднее время ответа: 5-15 минут<br>
+                    💬 Ответим на все ваши вопросы
+                </p>
+            </div>
+            
+            <div class="payment-info">
+                <h3 style="margin-bottom: 15px;">💳 Реквизиты для оплаты</h3>
+                <div class="payment-reqs">
+                    СБП: +79818376180<br>
+                    Банк: Юмани<br>
+                    Карта: 5599 0021 2767 5173
+                </div>
+                <p style="font-size: 14px; opacity: 0.8;">
+                    После оплаты отправьте скриншот в бота.<br>
+                    Админ проверит и отправит вам данные аккаунта.
+                </p>
+            </div>
+            
+            <div class="support-card" style="background: rgba(76, 175, 80, 0.2);">
+                <h3 style="margin-bottom: 15px;">📝 Получение аккаунта</h3>
+                <p>После подтверждения оплаты админом:</p>
+                <p style="font-weight: bold; margin: 10px 0;">
+                    Получить аккаунт вы можете у поддержки: @starfizovoi
+                </p>
+                <p style="font-size: 14px; opacity: 0.8;">
+                    Напишите номер заказа и получите данные аккаунта
+                </p>
+            </div>
+        </div>
+        
+        <!-- Уведомление -->
+        <div id="notification" class="notification"></div>
+        
+        <!-- Загрузчик -->
+        <div id="loader" class="loader" style="display: none;"></div>
+    </div>
+
+    <script>
+        // Инициализация Telegram Web App
+        let tg = window.Telegram.WebApp;
+        
+        // Расширяем на весь экран
+        tg.expand();
+        
+        // Получаем данные пользователя
+        const user = tg.initDataUnsafe.user;
+        
+        // Обновляем профиль пользователя
+        function updateProfile() {
+            if (user) {
+                document.getElementById('profile-username').textContent = '@' + (user.username || 'без username');
+                document.getElementById('profile-id').textContent = user.id;
+                
+                // Здесь можно добавить запрос к API для получения данных пользователя
+                // Пример:
+                // fetch(`/api/user/${user.id}`).then(...)
+            }
+            
+            // Загружаем историю заказов
+            loadOrders();
+        }
+        
+        // Показ секций
+        function showSection(sectionId) {
+            // Скрываем все секции
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Скрываем все продукты
+            document.getElementById('premium-products').classList.remove('active');
+            document.getElementById('fiz-products').classList.remove('active');
+            document.getElementById('otleg-products')?.classList.remove('active');
+            
+            // Показываем выбранную секцию
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Обновляем активную кнопку навигации
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.section === sectionId) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Если показываем профиль - обновляем данные
+            if (sectionId === 'profile') {
+                updateProfile();
+            }
+        }
+        
+        // Показ продуктов
+        function showProducts(type) {
+            // Скрываем все секции
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Показываем выбранный тип продуктов
+            if (type === 'premium') {
+                document.getElementById('premium-products').classList.add('active');
+            } else if (type === 'fiz') {
+                document.getElementById('fiz-products').classList.add('active');
+            }
+        }
+        
+        // Покупка продукта
+        function buyProduct(type, name, price) {
+            const orderId = Math.floor(Date.now() / 1000);
+            
+            // Создаем сообщение для отправки в бота
+            const message = `🛒 Заказ #${orderId}\n\n` +
+                           `📦 Товар: ${name}\n` +
+                           `💰 Цена: ${price}₽\n\n` +
+                           `Для оплаты перейдите в бота и следуйте инструкциям.`;
+            
+            // Показываем информацию о заказе
+            showNotification(`Заказ #${orderId} создан! Перейдите в бота для оплаты.`);
+            
+            // Открываем бота для оплаты
+            setTimeout(() => {
+                tg.openTelegramLink(`https://t.me/your_bot_username?start=order_${orderId}`);
+            }, 2000);
+        }
+        
+        // Загрузка истории заказов
+        function loadOrders() {
+            const ordersList = document.getElementById('orders-list');
+            
+            // Здесь будет запрос к API для получения заказов пользователя
+            // Пример мок данных:
+            const mockOrders = [
+                { id: 1, product: 'Премиум аккаунт', price: '39.99₽', status: 'confirmed', date: '15.01.2024' },
+                { id: 2, product: 'ФИЗ США', price: '30₽', status: 'pending', date: '14.01.2024' },
+                { id: 3, product: 'ФИЗ Индия', price: '15₽', status: 'confirmed', date: '10.01.2024' }
+            ];
+            
+            ordersList.innerHTML = '';
+            
+            mockOrders.forEach(order => {
+                const statusClass = `status-${order.status}`;
+                const statusText = order.status === 'confirmed' ? '✅ Подтвержден' : 
+                                 order.status === 'pending' ? '⏳ Ожидание' : '❌ Отклонен';
+                
+                ordersList.innerHTML += `
+                    <div class="order-card">
+                        <strong>#${order.id} ${order.product}</strong>
+                        <span class="order-status ${statusClass}">${statusText}</span><br>
+                        <small>${order.price} • ${order.date}</small>
+                    </div>
+                `;
+            });
+            
+            // Обновляем статистику
+            document.getElementById('stats-total').textContent = mockOrders.length;
+            document.getElementById('stats-active').textContent = mockOrders.filter(o => o.status === 'confirmed').length;
+        }
+        
+        // Показ уведомлений
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            notification.style.background = type === 'success' ? '#4CAF50' : '#F44336';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Показ загрузчика
+        function showLoader() {
+            document.getElementById('loader').style.display = 'block';
+        }
+        
+        // Скрытие загрузчика
+        function hideLoader() {
+            document.getElementById('loader').style.display = 'none';
+        }
+        
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProfile();
+            
+            // Добавляем обработчики для всех кнопок покупки
+            document.querySelectorAll('.buy-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
+        });
+        
+        // Обработка данных из Telegram
+        if (tg.initData) {
+            tg.ready();
+            tg.setHeaderColor('#1e3c72');
+            tg.setBackgroundColor('#1e3c72');
+        }
+    </script>
+</body>
+      </html>
